@@ -1,0 +1,13 @@
+/* Global Settings */
+*{
+	margin: 0; 
+}
+
+/* App Settings */
+.App {
+	background-color: #dddedd;
+	min-height: 100vh;  /* This occupies the whole screen */
+	display: flex; /* Turning the inside container to flex */
+	justify-content: center;
+	align-items: center;
+}
