@@ -1,4 +1,5 @@
 import React from "react";
+import "./myStyles.css";
 
 function MessageOthers() {
     var props1 = {
