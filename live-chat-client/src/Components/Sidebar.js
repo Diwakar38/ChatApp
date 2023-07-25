@@ -7,9 +7,16 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NightlightIcon from "@mui/icons-material/Nightlight";
 import SearchIcon from "@mui/icons-material/Search";
+import LightModeIcon from "@mui/icons-material/LightMode";
 import { Icon, IconButton } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../Features/themeSlice";
 
 function Sidebar() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const lightTheme = useSelector((state) => state.themeKey);
     const [conversations, setConversations] = useState([
         {
             name: "Test1",
@@ -30,33 +37,68 @@ function Sidebar() {
 
     return (
         <div className="sidebar-container">
-            <div className="sb-header">
-                <div>
+            <div className={"sb-header" + (lightTheme ? "" : " dark")}>
+                <div className="other-icons">
                     <IconButton>
-                        {/* This makes button clickable */}
-                        <AccountCircleIcon />
+                        <AccountCircleIcon
+                            className={"icon" + (lightTheme ? "" : " dark")}
+                        />
                     </IconButton>
-                </div>
-                <div>
-                    <IconButton>
-                        <PersonAddIcon />
+
+                    <IconButton
+                        onClick={() => {
+                            navigate("users");
+                        }}
+                    >
+                        <PersonAddIcon
+                            className={"icon" + (lightTheme ? "" : " dark")}
+                        />
                     </IconButton>
-                    <IconButton>
-                        <GroupAddIcon />
+                    <IconButton
+                        onClick={() => {
+                            navigate("groups");
+                        }}
+                    >
+                        <GroupAddIcon
+                            className={"icon" + (lightTheme ? "" : " dark")}
+                        />
                     </IconButton>
-                    <IconButton>
-                        <AddCircleIcon />
+                    <IconButton
+                        onClick={() => {
+                            navigate("create-groups");
+                        }}
+                    >
+                        <AddCircleIcon
+                            className={"icon" + (lightTheme ? "" : " dark")}
+                        />
                     </IconButton>
-                    <IconButton>
-                        <NightlightIcon />
+
+                    <IconButton
+                        onClick={() => {
+                            dispatch(toggleTheme());
+                        }}
+                    >
+                        {lightTheme && (
+                            <NightlightIcon
+                                className={"icon" + (lightTheme ? "" : " dark")}
+                            />
+                        )}
+                        {!lightTheme && (
+                            <LightModeIcon
+                                className={"icon" + (lightTheme ? "" : " dark")}
+                            />
+                        )}
                     </IconButton>
                 </div>
             </div>
-            <div className="sb-search">
-                <IconButton>
+            <div className={"sb-search" + (lightTheme ? "" : " dark")}>
+                <IconButton className={"icon" + (lightTheme ? "" : " dark")}>
                     <SearchIcon />
                 </IconButton>
-                <input placeholder="Search" className="search-box" />
+                <input
+                    placeholder="Search"
+                    className={"search-box" + (lightTheme ? "" : " dark")}
+                />
             </div>
             <div className="sb-conversations">
                 {conversations.map((conversation) => {

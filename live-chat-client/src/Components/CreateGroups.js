@@ -5,10 +5,12 @@ import DoneOutlineIcon from "@mui/icons-material/DoneOutline";
 function CreateGroups() {
     return (
         <div className="createGroups-container">
-            <input placeholder="Enter Group Name" className="search-box" />
-            <IconButton>
-                <DoneOutlineIcon />
-            </IconButton>
+            <div className="createGroups-container-items">
+                <input placeholder="Enter Group Name" className="search-box" />
+                <IconButton>
+                    <DoneOutlineIcon />
+                </IconButton>
+            </div>
         </div>
     );
 }
