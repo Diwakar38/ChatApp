@@ -1,31 +1,44 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const { default: mongoose } = require("mongoose");
-const userRoutes = require("./Routes/userRoutes");
+const app = express();
+const cors = require("cors");
+const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
-const app = express(); // creation of express instance
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 dotenv.config();
-app.use(express.json());
-const connectDB = async () => {
-    try {
-        const connect = await mongoose.connect(process.env.MONGO_URI);
-        console.log("Server is connected to DB");
-    } catch (err) {
-        console.log("Server is NOT connected to Database", err.message);
-    }
-};
 
-connectDB();
+app.use(express.json());
+
+const userRoutes = require("./Routes/userRoutes");
+const chatRoutes = require("./Routes/chatRoutes");
+const messageRoutes = require("./Routes/messageRoutes");
+
+const connectDb = async () => {
+  try {
+    const connect = await mongoose.connect(process.env.MONGO_URI);
+    console.log("Server is Connected to Database");
+  } catch (err) {
+    console.log("Server is NOT connected to Database", err.message);
+  }
+};
+connectDb();
 
 app.get("/", (req, res) => {
-    const link = "http://localhost:3000/";
-    res.redirect(link);
+  res.send("API is running123");
 });
+
 app.use("/user", userRoutes);
+app.use("/chat", chatRoutes);
+app.use("/message", messageRoutes);
 
-// Importing all the .env information
-const PORT = process.env.PORT || 4999;
+// Error Handling middlewares
+app.use(notFound);
+app.use(errorHandler);
 
-app.listen(PORT, () => {
-    console.log(`server is running at ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, console.log("Server is Running..."));
