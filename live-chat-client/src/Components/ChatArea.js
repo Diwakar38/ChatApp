@@ -9,6 +9,10 @@ import { useParams } from "react-router-dom";
 import Skeleton from "@mui/material/Skeleton";
 import axios from "axios";
 import { myContext } from "./MainContainer";
+import io from "socket.io-client";
+
+const ENDPOINT = "http://localhost:5000";
+var socket,chat;
 
 function ChatArea() {
   const lightTheme = useSelector((state) => state.themeKey);
@@ -19,10 +23,12 @@ function ChatArea() {
   // console.log(chat_id, chat_user);
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [allMessages, setAllMessages] = useState([]);
-  // console.log("Chat area id : ", chat_id._id);
+  const [allMessagesCopy, setAllMessagesCopy] = useState([]);
+  console.log("Chat area id : ", chat_id._id);
   // const refresh = useSelector((state) => state.refreshKey);
   const { refresh, setRefresh } = useContext(myContext);
   const [loaded, setloaded] = useState(false);
+  const [socketConnectionStatus, setSocketConnectionStatus] = useState(false);
   const sendMessage = () => {
     // console.log("SendMessage Fired to", chat_id._id);
     const config = {
@@ -42,10 +48,28 @@ function ChatArea() {
       .then(({ data }) => {
         console.log("Message Fired");
       });
+    socket.emit("newMessage", messageContent);
   };
   // const scrollToBottom = () => {
   //   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   // };
+  useEffect(()=> {
+    socket = io(ENDPOINT);
+    socket.emit("setup",userData);
+    socket.on("connection",()=>{
+      setSocketConnectionStatus(!socketConnectionStatus);
+    })
+  },[]);
+
+  useEffect(()=>{
+    socket.on("message recieved",(newMessage) => {
+      if(!allMessagesCopy || allMessagesCopy._id !== newMessage._id) {
+        // setAllMessages([...allMessages],newMessage);
+      } else {
+        setAllMessages([...allMessages],newMessage);
+      }
+    })
+  })
 
   useEffect(() => {
     console.log("Users refreshed");
@@ -59,8 +83,10 @@ function ChatArea() {
       .then(({ data }) => {
         setAllMessages(data);
         setloaded(true);
+        socket.emit("join chat", chat_id);
         // console.log("Data from Acess Chat API ", data);
       });
+    setAllMessagesCopy(allMessages);
     // scrollToBottom();
   }, [refresh, chat_id, userData.data.token]);
 
@@ -141,7 +167,7 @@ function ChatArea() {
               setMessageContent(e.target.value);
             }}
             onKeyDown={(event) => {
-              if (event.code == "Enter") {
+              if (event.code === "Enter") {
                 // console.log(event);
                 sendMessage();
                 setMessageContent("");

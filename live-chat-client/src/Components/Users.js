@@ -87,6 +87,7 @@ function Users() {
                 className={"list-tem" + (lightTheme ? "" : " dark")}
                 key={index}
                 onClick={() => {
+                  // This is responsible to initiate chat with this user
                   console.log("Creating chat with ", user.name);
                   const config = {
                     headers: {

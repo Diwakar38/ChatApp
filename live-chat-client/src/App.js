@@ -20,7 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="app" element={<MainContainer />}>
-          <Route path="welcome" index element={<Welcome />}></Route>
+          <Route path="welcome" element={<Welcome />}></Route>
           <Route path="chat/:_id" element={<ChatArea />}></Route>
           <Route path="users" element={<Users />}></Route>
           <Route path="groups" element={<Groups />}></Route>

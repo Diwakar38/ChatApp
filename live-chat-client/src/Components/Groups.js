@@ -91,18 +91,12 @@ function Groups() {
                 key={index}
                 onClick={() => {
                   console.log("Creating chat with group", group.name);
-                  // const config = {
-                  //   headers: {
-                  //     Authorization: `Bearer ${userData.data.token}`,
-                  //   },
-                  // };
-                  // axios.post(
-                  //   "http://localhost:8080/chat/",
-                  //   {
-                  //     userId: user._id,
-                  //   },
-                  //   config
-                  // );
+                  const config = {
+                    headers: {
+                      Authorization: `Bearer ${userData.data.token}`,
+                    },
+                  };
+                axios.put( "http://localhost:5000/chat/addSelfToGroup", { userId: user._id, }, config );
                   dispatch(refreshSidebarFun());
                 }}
               >
